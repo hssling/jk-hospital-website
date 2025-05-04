@@ -178,28 +178,38 @@
     <!-- About Section -->
     <section id="about" class="about">
         <h2>About JK Hospital</h2>
-        <div class="about-content">
-            <div class="about-text">
-                <p>Established in 2015, JK Hospital has been serving the healthcare needs of Bangalore with excellence and compassion. Our state-of-the-art facility is equipped with the latest medical technology and staffed by highly qualified medical professionals.</p>
-                <div class="stats">
-                    <div class="stat-item">
-                        <h3>8</h3>
-                        <p>Years of Excellence</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>75+</h3>
-                        <p>Medical Staff</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>5000+</h3>
-                        <p>Satisfied Patients</p>
-                    </div>
-                    <div class="stat-item">
-                        <h3>24/7</h3>
-                        <p>Emergency Services</p>
-                    </div>
-                </div>
-            </div>
+        <div class="map-container">
+            <div id="map"></div>
+            <script>
+                function initMap() {
+                    const location = { lat: 12.9106, lng: 77.6528 }; // Updated coordinates for Madanayakana Halli
+                    const map = new google.maps.Map(document.getElementById('map'), {
+                        zoom: 15,
+                        center: location,
+                    });
+
+                    const marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        title: 'JK Hospital'
+                    });
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `
+                            <div class="info-window">
+                                <h3>JK Hospital</h3>
+                                <p>No. 24, Near Anjaneya Temple, Lakshmipura Main Road, Dombarahalli, Madanayakana Halli-562123 (Near Anjaneya Temple)</p>
+                                <p>Phone: +91 8941087719 / +91 7975228208 / +91 80 29577111</p>
+                                <p>Hours: Mon - Sat: 8:00 AM - 8:00 PM</p>
+                            </div>
+                        `
+                    });
+
+                    marker.addListener('click', () => {
+                        infoWindow.open(map, marker);
+                    });
+                }
+            </script>
             <div class="about-image">
                 <img src="https://source.unsplash.com/800x600/?hospital-interior" alt="JK Hospital Interior">
             </div>
@@ -323,21 +333,21 @@
         <h2>Contact Us</h2>
         <div class="contact-container">
             <div class="contact-info">
-                <div class="info-item">
+                <div class="contact-item">
                     <i class="fas fa-map-marker-alt"></i>
-                    <p>10th Main Road, 10th Cross Road, 12th Main Road, 11th Main Road, Bangalore, Karnataka 560001</p>
+                    <p>No. 24, Near Anjaneya Temple, Lakshmipura Main Road, Dombarahalli, Madanayakana Halli-562123 (Near Anjaneya Temple)</p>
                 </div>
-                <div class="info-item">
+                <div class="contact-item">
                     <i class="fas fa-phone"></i>
-                    <p>+91 98765 43210</p>
+                    <p>+91 8941087719 / +91 7975228208 / +91 80 29577111</p>
                 </div>
-                <div class="info-item">
+                <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <p>info@jkhospital.com</p>
+                    <p>info@jkhospital.in</p>
                 </div>
-                <div class="info-item">
+                <div class="contact-item">
                     <i class="fas fa-clock"></i>
-                    <p>Mon-Sun: 8:00 AM - 8:00 PM</p>
+                    <p>Mon - Sat: 8:00 AM - 8:00 PM</p>
                 </div>
             </div>
             <div id="map" class="map"></div>
