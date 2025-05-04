@@ -280,9 +280,75 @@ if (prevButton && nextButton) {
 // Auto advance slides every 5 seconds
 setInterval(nextSlide, 5000);
 
+// Department dropdown functionality
+async function loadDepartments() {
+    try {
+        const response = await fetch('/api/departments');
+        const departments = await response.json();
+        
+        const departmentSelect = document.getElementById('department');
+        if (departmentSelect) {
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept.name;
+                option.textContent = dept.name;
+                departmentSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading departments:', error);
+    }
+}
+
+// Load available time slots
+async function loadTimeSlots(date) {
+    try {
+        const response = await fetch(`/api/time-slots/${date}`);
+        const timeSlots = await response.json();
+        
+        const timeSelect = document.getElementById('time');
+        if (timeSelect) {
+            timeSelect.innerHTML = '';
+            timeSlots.forEach(slot => {
+                const option = document.createElement('option');
+                option.value = slot.time;
+                option.textContent = slot.time;
+                if (!slot.available) {
+                    option.disabled = true;
+                }
+                timeSelect.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading time slots:', error);
+    }
+}
+
 // Form submission with AJAX
 const appointmentForm = document.getElementById('appointmentForm');
 if (appointmentForm) {
+    // Load departments when page loads
+    loadDepartments();
+
+    // Handle department change
+    const departmentSelect = document.getElementById('department');
+    if (departmentSelect) {
+        departmentSelect.addEventListener('change', async (e) => {
+            const dateInput = document.getElementById('date');
+            if (dateInput && dateInput.value) {
+                await loadTimeSlots(dateInput.value);
+            }
+        });
+    }
+
+    // Handle date change
+    const dateInput = document.getElementById('date');
+    if (dateInput) {
+        dateInput.addEventListener('change', async (e) => {
+            await loadTimeSlots(e.target.value);
+        });
+    }
+
     appointmentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -301,17 +367,106 @@ if (appointmentForm) {
                 body: JSON.stringify(data)
             });
 
+            const result = await response.json();
+            
             if (response.ok) {
-                alert('Thank you for your appointment request! We will contact you soon.');
-                appointmentForm.reset();
+                const successModal = document.createElement('div');
+                successModal.className = 'success-modal';
+                successModal.innerHTML = `
+                    <div class="modal-content">
+                        <h3>Appointment Booked Successfully!</h3>
+                        <p>${result.message}</p>
+                        <button class="close-modal">Close</button>
+                    </div>
+                `;
+                document.body.appendChild(successModal);
+
+                const closeModal = successModal.querySelector('.close-modal');
+                closeModal.addEventListener('click', () => {
+                    successModal.remove();
+                    appointmentForm.reset();
+                });
+
+                // Auto close after 5 seconds
+                setTimeout(() => {
+                    successModal.remove();
+                    appointmentForm.reset();
+                }, 5000);
             } else {
-                throw new Error('Failed to submit appointment');
+                throw new Error(result.message || 'Failed to submit appointment');
             }
         } catch (error) {
             alert('Error submitting appointment. Please try again later.');
         }
     });
 }
+
+// Department cards functionality
+document.querySelectorAll('.department-card').forEach(card => {
+    card.addEventListener('click', async () => {
+        const deptName = card.querySelector('h3').textContent;
+        try {
+            const response = await fetch('/api/departments');
+            const departments = await response.json();
+            
+            const dept = departments.find(d => d.name === deptName);
+            if (dept) {
+                const modal = document.createElement('div');
+                modal.className = 'dept-modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3>${deptName}</h3>
+                        <p>${dept.description}</p>
+                        <h4>Available Doctors:</h4>
+                        <ul class="doctor-list">
+                            ${dept.doctors.map(doc => `<li>${doc}</li>`).join('')}
+                        </ul>
+                        <button class="close-modal">Close</button>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+
+                const closeModal = modal.querySelector('.close-modal');
+                closeModal.addEventListener('click', () => {
+                    modal.remove();
+                });
+            }
+        } catch (error) {
+            console.error('Error loading department details:', error);
+        }
+    });
+});
+
+// Facility cards functionality
+document.querySelectorAll('.facility-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const facilityName = card.querySelector('h3').textContent;
+        const modal = document.createElement('div');
+        modal.className = 'facility-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <h3>${facilityName}</h3>
+                <p>${card.querySelector('p').textContent}</p>
+                <button class="close-modal">Close</button>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        const closeModal = modal.querySelector('.close-modal');
+        closeModal.addEventListener('click', () => {
+            modal.remove();
+        });
+    });
+});
+
+// Close modals when clicking outside
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('dept-modal') || 
+        e.target.classList.contains('facility-modal') || 
+        e.target.classList.contains('success-modal')) {
+        e.target.remove();
+    }
+});
 
 // Add scroll animation
 document.addEventListener('DOMContentLoaded', function() {
