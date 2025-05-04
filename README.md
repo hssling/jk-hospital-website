@@ -1,6 +1,6 @@
 # JK Hospital Website
 
-A modern, responsive website for JK Hospital built with HTML, CSS, and JavaScript.
+A modern, responsive website for JK Hospital built with HTML, CSS, JavaScript, and Node.js backend.
 
 ## Features
 
@@ -12,55 +12,118 @@ A modern, responsive website for JK Hospital built with HTML, CSS, and JavaScrip
 - Smooth scrolling navigation
 - PWA support for offline access
 - Mobile app support
+- Appointment booking system
+- Department and facility information
+- Interactive modals and notifications
 
 ## Setup Instructions
 
-1. Clone this repository
-2. Get a Google Maps API key from [Google Cloud Console](https://console.cloud.google.com/)
-3. Replace `YOUR_API_KEY` in `index.html` with your actual API key
-4. Host the website on a web server
-
-## Deploying the Website
-
-1. Create a GitHub repository
-2. Push your code to the repository
-3. Enable GitHub Pages
-4. The website will be available at `https://username.github.io/repository-name`
-
-## Creating Android App (APK)
-
-To create an Android app from this website:
-
-1. Install Node.js from https://nodejs.org/
-2. Install Bubblewrap CLI:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/hssling/jk-hospital-website.git
+   cd jk-hospital-website
    ```
-   npm install -g @bubblewrap/cli
-   ```
-3. Generate the TWA configuration:
-   ```
-   bubblewrap init
-   ```
-4. Build the APK:
-   ```
-   bubblewrap build
-   ```
-5. The APK will be generated in the `android/app/build/outputs/apk/release/` directory
 
-## File Structure
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-- `index.html` - Main HTML file
-- `styles.css` - CSS styles
-- `script.js` - JavaScript functionality
-- `manifest.json` - PWA manifest
-- `sw.js` - Service Worker
-- `README.md` - Project documentation
+3. Start the development server:
+   ```bash
+   npm start
+   ```
+
+4. The website will be available at http://localhost:3000
+
+## Development Workflow
+
+1. Before making changes, pull the latest code:
+   ```bash
+   git pull origin main
+   ```
+
+2. For major changes, create a new branch:
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. After making changes:
+   ```bash
+   git add .
+   git commit -m "Your descriptive commit message"
+   git push origin feature/your-feature-name
+   ```
+
+4. Create a pull request on GitHub to merge your changes into main
+
+## Project Structure
+
+```
+jk-hospital-website/
+├── index.html          # Main HTML file
+├── styles.css          # CSS styles
+├── script.js           # JavaScript functionality
+├── server.js           # Node.js/Express backend
+├── package.json        # Node.js dependencies
+├── manifest.json       # PWA manifest
+├── sw.js               # Service Worker
+└── README.md          # This file
+```
 
 ## Technologies Used
 
-- HTML5
-- CSS3
-- JavaScript
-- Google Maps API
-- Font Awesome Icons
-- PWA Technology
-- Trusted Web Activity (TWA) for Android app
+- Frontend:
+  - HTML5
+  - CSS3
+  - JavaScript
+  - Font Awesome Icons
+  - Google Maps API
+
+- Backend:
+  - Node.js
+  - Express.js
+  - CORS
+  - Body Parser
+  - Nodemailer
+
+- Development Tools:
+  - Git
+  - npm
+  - nodemon
+
+## Email Configuration
+
+To enable email notifications for appointment bookings, update the email configuration in `server.js`:
+
+```javascript
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'your-email@gmail.com', // Replace with your email
+        pass: 'your-app-password'    // Replace with your app password
+    }
+});
+```
+
+## Deployment
+
+1. GitHub Pages:
+   - The website is automatically deployed to GitHub Pages
+   - Accessible at: https://hssling.github.io/jk-hospital-website/
+
+2. Local Development:
+   - Frontend only: Open `index.html` in your browser
+   - With backend: Run `npm start` and access at http://localhost:3000
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
